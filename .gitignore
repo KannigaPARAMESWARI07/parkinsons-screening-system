@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+venv/
+env/
+backend/models/*.pkl
+backend/models/*.pt
+backend/users.json
+backend/user_baselines/
+backend/data/
+backend/cert.pem
+backend/key.pem
+mobile/node_modules/
+.env
+Thumbs.db
+ngrok.exe
+ngrok.zip

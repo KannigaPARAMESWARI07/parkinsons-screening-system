@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PD Screener</title>
+<link rel="stylesheet" href="/style.css"/>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- LOGIN -->
+  <div id="screen-login" class="auth-screen">
+    <div class="auth-box">
+      <div class="auth-logo">PD Screener</div>
+      <div class="auth-tagline">Motor biomarker assessment system</div>
+      <div class="auth-card">
+        <div class="auth-title">Sign in</div>
+        <div class="auth-subtitle">Welcome back</div>
+        <form id="form-login">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" id="login-email" type="email" placeholder="you@email.com"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="password-wrap">
+              <input class="form-input" id="login-password" type="password" placeholder="Your password"/>
+              <button type="button" class="toggle-pw" data-target="login-password">👁</button>
+            </div>
+          </div>
+          <div class="form-error" id="err-login"></div>
+          <button class="btn-primary" id="btn-login" type="submit">Sign in</button>
+        </form>
+      </div>
+      <div class="auth-switch">
+        Don't have an account?
+        <a onclick="showAuthScreen('register')">Create one</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTER -->
+  <div id="screen-register" class="auth-screen" style="display:none">
+    <div class="auth-box">
+      <div class="auth-logo">PD Screener</div>
+      <div class="auth-tagline">Motor biomarker assessment system</div>
+      <div class="auth-card">
+        <div class="auth-title">Create account</div>
+        <div class="auth-subtitle">Enter your details to get started</div>
+        <form id="form-register">
+          <div class="form-group">
+            <label class="form-label">Full name</label>
+            <input class="form-input" id="reg-name" type="text" placeholder="Your full name"/>
+            <div class="form-error" id="err-name"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" id="reg-email" type="email" placeholder="you@email.com"/>
+            <div class="form-error" id="err-email"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Age</label>
+              <input class="form-input" id="reg-age" type="number" placeholder="e.g. 45" min="1" max="120"/>
+              <div class="form-error" id="err-age"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Gender</label>
+              <select class="form-select" id="reg-gender">
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+              <div class="form-error" id="err-gender"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="password-wrap">
+              <input class="form-input" id="reg-password" type="password" placeholder="Min. 6 characters"/>
+              <button type="button" class="toggle-pw" data-target="reg-password">👁</button>
+            </div>
+            <div class="form-error" id="err-password"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm password</label>
+            <div class="password-wrap">
+              <input class="form-input" id="reg-confirm" type="password" placeholder="Repeat password"/>
+              <button type="button" class="toggle-pw" data-target="reg-confirm">👁</button>
+            </div>
+            <div class="form-error" id="err-confirm"></div>
+          </div>
+          <div class="form-error" id="err-register"></div>
+          <button class="btn-primary" id="btn-register" type="submit">Create account</button>
+        </form>
+      </div>
+      <div class="auth-switch">
+        Already have an account?
+        <a onclick="showAuthScreen('login')">Sign in</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <header class="header" id="main-header" style="display:none">
+    <div class="logo">PD Screener</div>
+    <div class="header-right">
+      <div class="progress-dots">
+        <div class="dot" id="d1"></div>
+        <div class="dot" id="d2"></div>
+        <div class="dot" id="d3"></div>
+        <div class="dot" id="d4"></div>
+      </div>
+      <div class="user-bar" id="user-bar">
+        <div class="user-avatar" id="user-avatar">U</div>
+        <span class="user-name" id="user-bar-name"></span>
+        <button class="btn-logout" id="btn-logout">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Config -->
+  <div class="screen" id="screen-config">
+    <div class="step-label">Setup</div>
+    <h1>Connect to backend</h1>
+    <p class="instruction">Click Test connection to verify the server is running.</p>
+    <div class="card" style="margin:24px 0">
+      <label class="field-label">Backend URL</label>
+      <input class="text-input" id="backend-url"
+             type="text" value=""
+             placeholder="Auto-detected from page address"/>
+      <div class="status-row">
+        <div class="status-dot" id="status-dot"></div>
+        <span id="status-text">Not tested</span>
+      </div>
+    </div>
+    <button class="btn-primary" id="btn-connect">Test connection</button>
+    <button class="btn-secondary" id="btn-skip">Skip — use demo mode</button>
+  </div>
+
+  <!-- Welcome -->
+  <div class="screen" id="screen-welcome">
+    <div class="step-label">Parkinson's Screening</div>
+    <h1>Motor Biomarker Assessment</h1>
+    <p class="instruction">
+      Four quick tests using your device microphone and motion sensors
+      to screen for Parkinson's risk patterns.
+      For research use only — not a medical diagnosis.
+    </p>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="test-num">01</div>
+        <div class="test-icon">🎤</div>
+        <div class="test-name">Voice</div>
+        <div class="test-desc">Sustained vowel sound analysis</div>
+      </div>
+      <div class="test-card">
+        <div class="test-num">02</div>
+        <div class="test-icon">📳</div>
+        <div class="test-name">Tremor</div>
+        <div class="test-desc">Hand stability via motion sensor</div>
+      </div>
+      <div class="test-card">
+        <div class="test-num">03</div>
+        <div class="test-icon">🚶</div>
+        <div class="test-name">Gait</div>
+        <div class="test-desc">Walking pattern analysis</div>
+      </div>
+      <div class="test-card">
+        <div class="test-num">04</div>
+        <div class="test-icon">👆</div>
+        <div class="test-name">Tapping</div>
+        <div class="test-desc">Finger speed and rhythm</div>
+      </div>
+    </div>
+    <button class="btn-primary" id="btn-start">Begin assessment</button>
+  </div>
+
+  <!-- Voice -->
+  <div class="screen" id="screen-voice">
+    <div class="step-label">Test 01 of 04 — Voice</div>
+    <h1>Voice Analysis</h1>
+    <p class="instruction">
+      Click Start, then say <strong>"aaah"</strong> steadily for 5 seconds.
+      Hold a consistent pitch and volume.
+    </p>
+    <div class="visual-box" id="voice-visual">
+      <div class="big-icon">🎤</div>
+      <div class="visual-label">Ready to record</div>
+    </div>
+    <div class="progress-bar-track" id="voice-progress-wrap" style="display:none">
+      <div class="progress-bar-fill" id="voice-progress"></div>
+    </div>
+    <button class="btn-primary" id="btn-voice">Start recording</button>
+    <button class="btn-secondary" id="btn-voice-skip">Skip this test</button>
+  </div>
+
+  <!-- Tremor -->
+  <div class="screen" id="screen-tremor">
+    <div class="step-label">Test 02 of 04 — Tremor</div>
+    <h1>Tremor Analysis</h1>
+    <p class="instruction">
+      Hold your device flat in your outstretched hand
+      and stay completely still for 5 seconds.
+    </p>
+    <div class="visual-box" id="tremor-visual">
+      <div class="big-icon">📱</div>
+      <div class="visual-label">Ready to measure</div>
+    </div>
+    <div class="sensor-grid" id="tremor-sensors" style="display:none">
+      <div class="sensor-card">
+        <div class="sensor-label">X-axis</div>
+        <div class="sensor-value" id="sx">0.00</div>
+      </div>
+      <div class="sensor-card">
+        <div class="sensor-label">Y-axis</div>
+        <div class="sensor-value" id="sy">0.00</div>
+      </div>
+      <div class="sensor-card">
+        <div class="sensor-label">Z-axis</div>
+        <div class="sensor-value" id="sz">0.00</div>
+      </div>
+    </div>
+    <button class="btn-primary" id="btn-tremor">Start tremor test</button>
+    <button class="btn-secondary" id="btn-tremor-skip">Skip this test</button>
+  </div>
+
+  <!-- Gait -->
+  <div class="screen" id="screen-gait">
+    <div class="step-label">Test 03 of 04 — Gait</div>
+    <h1>Gait Analysis</h1>
+    <p class="instruction">
+      Hold your device naturally and walk at your normal pace
+      for 15 seconds.
+    </p>
+    <div class="visual-box" id="gait-visual">
+      <div class="big-icon">🚶</div>
+      <div class="visual-label">Ready to measure</div>
+    </div>
+    <div class="progress-bar-track" id="gait-progress-wrap" style="display:none">
+      <div class="progress-bar-fill" id="gait-progress"></div>
+    </div>
+    <button class="btn-primary" id="btn-gait">Start walking test</button>
+    <button class="btn-secondary" id="btn-gait-skip">Skip this test</button>
+  </div>
+
+  <!-- Tapping -->
+  <div class="screen" id="screen-tapping">
+    <div class="step-label">Test 04 of 04 — Tapping</div>
+    <h1>Tapping Test</h1>
+    <p class="instruction">
+      Tap the circle as fast as possible with your index finger.
+      Complete all 25 taps.
+    </p>
+    <div class="tap-counter">
+      <span id="tap-count">0</span> / 25
+    </div>
+    <div class="progress-bar-track" style="margin-bottom:32px">
+      <div class="progress-bar-fill" id="tap-progress"></div>
+    </div>
+    <button class="tap-circle" id="tap-circle" disabled>TAP</button>
+    <button class="btn-primary" id="btn-tapping-start">Start tapping test</button>
+    <button class="btn-secondary" id="btn-tapping-skip">Skip this test</button>
+  </div>
+
+  <!-- Result -->
+  <div class="screen" id="screen-result">
+    <div class="step-label">Assessment Complete</div>
+    <div class="profile-card" id="result-profile" style="display:none">
+      <div class="profile-avatar" id="result-avatar">U</div>
+      <div class="profile-info">
+        <div class="profile-name" id="result-name">--</div>
+        <div class="profile-meta" id="result-meta">--</div>
+      </div>
+    </div>
+    <div class="result-hero" id="result-hero">
+      <div class="risk-badge" id="result-badge">Calculating...</div>
+      <div class="score-number" id="result-score">--</div>
+      <div class="score-unit">out of 100</div>
+    </div>
+    <div class="section-title">Modality breakdown</div>
+    <div class="modality-grid" id="modality-grid"></div>
+    <div class="advice-box" id="advice-box">
+      <div class="advice-title">Recommendation</div>
+      <div class="advice-text" id="advice-text">--</div>
+    </div>
+    <div class="section-title" id="history-title" style="display:none">
+      Previous sessions
+    </div>
+    <div id="history-list"></div>
+    <div class="disclaimer">
+      This tool does not provide a medical diagnosis.
+      Always consult a qualified neurologist.
+    </div>
+    <button class="btn-primary" id="btn-restart">Start new assessment</button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/api.js"></script>
+<script src="/app.js"></script>
+<script src="/screens/auth.js"></script>
+<script src="/screens/config.js"></script>
+<script src="/screens/welcome.js"></script>
+<script src="/screens/voice.js"></script>
+<script src="/screens/tremor.js"></script>
+<script src="/screens/gait.js"></script>
+<script src="/screens/tapping.js"></script>
+<script src="/screens/result.js"></script>
+</body>
+</html>
